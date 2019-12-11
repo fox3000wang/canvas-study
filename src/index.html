@@ -8,7 +8,10 @@
     </canvas>
   </div>
   <div style="background: #888; height: 20px;">
-    <button onclick="startDraw()">startDraw</button>
+    <!-- <button onclick="startDraw()">startDraw</button> -->
+    <button onclick="addGrid()">+</button>
+    <button onclick="decGrid()">-</button>
+
   </div>
 </body>
 
@@ -31,6 +34,18 @@
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, 695, 616)
+  }
+
+  function addGrid() {
+    gridNum++;
+    clean();
+    drawYellowGrid();
+  }
+
+  function decGrid() {
+    gridNum = gridNum > 2 ? gridNum - 1 : gridNum;
+    clean();
+    drawYellowGrid();
   }
 
   /**
