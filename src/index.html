@@ -1,0 +1,85 @@
+<html>
+
+<body>
+  <div style="width: 700px; height: 700px;">
+    <div style="position: absolute; top: 10px;">
+      <canvas id="canvasBg" width="700" height="700">
+      </canvas>
+    </div>
+    <div style="position: absolute; top: 10px;">
+      <canvas id="canvas" width="700" height="700">
+      </canvas>
+    </div>
+  </div>
+  <div style="background: #888; height: 20px;">
+    <button onclick="startDraw()">startDraw</button>
+  </div>
+</body>
+
+<script>
+  var sX, sY, eX, eY;
+  var border = 2;
+
+  function init() {
+    var canvas = document.getElementById('canvasBg');
+    var ctx = canvas.getContext('2d');
+    var img = new Image();
+    img.src = 'pic.png';
+    img.onload = function () {
+      ctx.drawImage(img, 0, 0, 695, 616);
+    }
+  }
+
+  function drawGrid() {
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, 695, 616)
+
+    ctx.fillStyle = "#00AA00";
+
+    //ctx.strokeRect(sX, sY, eX - sX, eY - sY);
+    ctx.fillRect(sX, sY, eX - sX, eY - sY);
+    ctx.clearRect(sX + border, sY + border, eX - sX - (border * 2), eY - sY - (border * 2));
+
+  }
+
+  function mousemoveHandler(target) {
+    eX = target.x;
+    eY = target.y;
+    drawGrid();
+  }
+
+  function drawing() {
+    var canvas = document.getElementById('canvas');
+    canvas.addEventListener('mousemove', mousemoveHandler);
+  }
+
+  function mousedownHandler(target) {
+    drawing();
+    sX = target.x;
+    sY = target.y;
+    canvas.addEventListener('mouseup', mouseupHandler);
+  }
+
+  function mouseupHandler() {
+    var canvas = document.getElementById('canvas');
+    canvas.removeEventListener('mousemove', mousemoveHandler);
+  }
+
+
+  function startDraw() {
+    var canvas = document.getElementById('canvas');
+    canvas.addEventListener('mousedown', mousedownHandler);
+  }
+
+  function stopDraw() {
+    var canvas = document.getElementById('canvas');
+
+  }
+
+  init();
+  startDraw();
+</script>
+
+</html>
