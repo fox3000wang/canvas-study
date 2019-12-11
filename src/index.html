@@ -2,14 +2,10 @@
 
 <body>
   <div style="width: 700px; height: 700px;">
-    <div style="position: absolute; top: 10px;">
-      <canvas id="canvasBg" width="700" height="700">
-      </canvas>
-    </div>
-    <div style="position: absolute; top: 10px;">
-      <canvas id="canvas" width="700" height="700">
-      </canvas>
-    </div>
+    <canvas id="canvasBg" width="700" height="700" style="position: absolute; top: 0px; left: 0px;">
+    </canvas>
+    <canvas id="canvas" width="700" height="700" style="position: absolute; top: 0px; left: 0px;">
+    </canvas>
   </div>
   <div style="background: #888; height: 20px;">
     <button onclick="startDraw()">startDraw</button>
@@ -37,11 +33,14 @@
     ctx.clearRect(0, 0, 695, 616)
   }
 
-  function drawGrid() {
-    clean()
+  /**
+   * 鼠标弹起生成黄色网格
+   */
+  function drawYellowGrid() {
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
-    ctx.fillStyle = "#00AA00";
+    ctx.fillStyle = "yellow";
+    ctx.strokeStyle = "yellow";
 
     var w = (eX - sX) / gridNum;
     var h = (eY - sY) / gridNum;
@@ -52,15 +51,40 @@
     }
   }
 
-  function mousemoveHandler(target) {
-    eX = target.x;
-    eY = target.y;
-    drawGrid();
+  /**
+   * 移动鼠标绘制绿色网格
+   */
+  function drawGreenGrid() {
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = "#00AA00";
+    ctx.strokeStyle = "#00AA00";
+
+    ctx.beginPath();
+    ctx.arc(eX, eY, 8, 0, Math.PI * 2, true);
+    ctx.arc(eX, eY, 7, 0, Math.PI * 2, true);
+    ctx.stroke();
+    ctx.closePath();
+
+    var w = (eX - sX) / gridNum;
+    var h = (eY - sY) / gridNum;
+
+    for (var i = 0; i <= gridNum; i++) {
+      ctx.fillRect(sX + (w * i), sY, BORDER, eY - sY + 1);
+      ctx.fillRect(sX, sY + (h * i), eX - sX + 1, BORDER);
+    }
   }
 
   function drawing() {
     var canvas = document.getElementById('canvas');
     canvas.addEventListener('mousemove', mousemoveHandler);
+  }
+
+  function mousemoveHandler(target) {
+    clean();
+    eX = target.x;
+    eY = target.y;
+    drawGreenGrid();
   }
 
   function mousedownHandler(target) {
@@ -71,10 +95,11 @@
   }
 
   function mouseupHandler() {
+    clean();
     var canvas = document.getElementById('canvas');
     canvas.removeEventListener('mousemove', mousemoveHandler);
+    drawYellowGrid();
   }
-
 
   function startDraw() {
     var canvas = document.getElementById('canvas');
